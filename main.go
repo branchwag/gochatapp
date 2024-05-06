@@ -17,7 +17,7 @@ var broadcast = make(chan string)
 var clients = make(map[*Client]bool)
 
 func main(){
-	http.Handle("/", http.FileServer(http.Dir("/public")))
+	http.Handle("/", http.FileServer(http.Dir("./public")))
 
 	http.Handle("/ws", websocket.Handler(handleConnections))
 

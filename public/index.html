@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chat</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #4e4c67;
+        color: #dcd6f7;
+      }
+      #messages {
+        list-style-type: none;
+        padding: 0;
+      }
+      #message-input {
+        width: 300px;
+      }
+      form {
+        position: fixed;
+        bottom: 10px;
+        padding: 10px 10px;
+      }
+      #submit-button {
+        border-radius: 12px;
+        padding: 10px 10px;
+        font-weight: bold;
+        color: black;
+        background-color: #985f6f;
+        border-style: solid;
+        border-color: white;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+      }
+      #submit-button:hover {
+        background-color: #ff85c2;
+        transform: scale(1.05);
+      }
+      #content-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="content-container">
+      <ul id="messages"></ul>
+      <form id="message-form">
+        <input
+          id="message-input"
+          type="text"
+          autocomplete="off"
+          autofocus
+          placeholder="Type your message..."
+        />
+        <button type="submit" id="submit-button">Send</button>
+      </form>
+    </div>
+
+    <script>
+      (function () {
+        var form = document.getElementById("message-form");
+        var messageInput = document.getElementById("message-input");
+        var messagesList = document.getElementById("messages");
+
+        var conn = new WebSocket("ws://localhost:8080/ws");
+        conn.onmessage = function (e) {
+          var message = document.createElement("li");
+          message.textContent = e.data;
+          messagesList.appendChild(message);
+        };
+
+        form.onsubmit = function (e) {
+          e.preventDefault();
+          conn.send(messageInput.value);
+          messageInput.value = "";
+          return false;
+        };
+      })();
+    </script>
+  </body>
+</html>
